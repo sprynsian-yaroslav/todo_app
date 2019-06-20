@@ -508,6 +508,14 @@ hr {
   transition-property: left;
   transition-duration: 500ms;
 }
+.arrow{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  z-index: 99999;
+}
 
 @media (min-width: 899px) {
   .learn-bar {

@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import Header from './Components/Header';
-import TodoFooter from './Components/Footer';
 import List from './Components/List';
 
 class App extends React.Component {
@@ -9,29 +8,79 @@ class App extends React.Component {
         super(props);
         this.state = {
              todoList: [],
-        }
 
-        const deleteItem = (deleteItem)=> {
+        };
+
+
+
+        this.deleteItem = (deleteItem)=> {
                 this.setState(prev => {
-                    this.state.todoList = prev.todoList.filter((item) => {
-                        return item !== deleteItem;
-                    })
+
+                    return{todoList: prev.todoList.filter((item) => {
+                            return item.key !== deleteItem.key;
+                        }
+                    )}
                 })
-            }
+            };
 
-        this.addToList = (itemName) => {
-            console.log('ghbdtn');
-            console.log(this.state.todoList);
-            const item = {
-                name: itemName,
-                chacked: false
-            }
+            this.addToList = (itemName) => {
+                const item = {
+                    name: itemName,
+                    chacked: false,
+                    key: Date.now()
+                };
 
-            this.setState(prev => {
-                this.state.todoList = [...prev.todoList, item]
+                this.setState(function(prev) {
+                    return{ todoList : [...prev.todoList, item]}
+                }
+                )
+        };
+
+        this.copleteAll = () => {
+            this.setState({
+                stateAllItem: !this.state.stateAllItem
+            });
+
+            this.setState(function(prev) {
+                return{ todoList : prev.todoList.map(item => {
+                        return{
+                            name: item.name,
+                            chacked: !this.state.stateAllItem,
+                            key: item.key
+                        }
+
+                    })}
             })
-            console.log(this.state.todoList);
+        };
+
+        this.changeStateItem = (item) => {
+                this.setState(function (prev) {
+
+                        return{ todoList: prev.todoList.map((prevItem) => {
+
+                            if(item.key === prevItem.key){
+                                return{
+                                    name: item.name,
+                                    chacked: !item.chacked,
+                                    key: item.key
+                                }
+                            }
+                            else
+                                return prevItem;
+                        })}
+
+
+                    })
+        };
+
+        this.clearCompleted = () => {
+            this.setState(function(prev) {
+                return{ todoList : prev.todoList.filter(item => {
+                        return  !item.chacked;
+                    })}
+            })
         }
+
 
         }
 
@@ -39,18 +88,20 @@ class App extends React.Component {
 
 
     render() {
-
         return (
             <div className="App">
 
                 <section className="todoapp">
                     <Header
                         addToList = {this.addToList}
+                        copleteAll = {this.copleteAll}
                     />
                     <List
                         todoList = {this.state.todoList}
+                        clearCompleted = {this.clearCompleted}
+                        changeStateItem = {this.changeStateItem}
+                        deleteItem = {this.deleteItem}
                     />
-                    <TodoFooter/>
                 </section>
 
                 <footer className="info">
